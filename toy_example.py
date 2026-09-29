@@ -39,4 +39,4 @@ elif eligible_result == sat and not_eligible_result == sat:
 elif eligible_result == unsat and not_eligible_result == unsat:
     print("Policy verdict: INCONSISTENT FACTS")
 else:
-    print("Policy verdict: UNKNOWN")c
+    print("Policy verdict: UNKNOWN")
