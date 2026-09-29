@@ -1,4 +1,4 @@
-from z3 import And, Int, Solver, sat
+from z3 import And, Int, Not, Solver, sat, unsat
 
 # Employee information
 months_worked = Int("months_worked")
@@ -14,13 +14,29 @@ eligible = And(
 solver = Solver()
 solver.add(months_worked == 14)
 solver.add(hours_worked == 1100)
+
+# Check whether ELIGIBLE is possible
+solver.push()
 solver.add(eligible)
+eligible_result = solver.check()
+solver.pop()
 
-result = solver.check()
+# Check whether NOT ELIGIBLE is possible
+solver.push()
+solver.add(Not(eligible))
+not_eligible_result = solver.check()
+solver.pop()
 
-print("Z3 result:", result)
+print("Eligible result:", eligible_result)
+print("Not eligible result:", not_eligible_result)
 
-if result == sat:
+if eligible_result == sat and not_eligible_result == unsat:
     print("Policy verdict: ELIGIBLE")
-else:
+elif eligible_result == unsat and not_eligible_result == sat:
     print("Policy verdict: NOT ELIGIBLE")
+elif eligible_result == sat and not_eligible_result == sat:
+    print("Policy verdict: NO DECISION")
+elif eligible_result == unsat and not_eligible_result == unsat:
+    print("Policy verdict: INCONSISTENT FACTS")
+else:
+    print("Policy verdict: UNKNOWN")c
